@@ -10,6 +10,7 @@ parser.add_argument('name', required=True)
 parser.add_argument('surname', required=True)
 parser.add_argument('age', required=True, type=int)
 parser.add_argument('about', required=True)
+parser.add_argument('password', required=True)
 
 
 def abort_if_news_not_found(user_id):
