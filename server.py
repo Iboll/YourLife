@@ -7,10 +7,12 @@ from flask_restful import Api
 from werkzeug.utils import redirect
 
 from data import db_session
+from data.tasks import Task
 from data.users import User
+from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
-from resources import users_resource
+from resources import users_resource, tasks_resource
 
 app = Flask(__name__)
 api = Api(app)
@@ -22,12 +24,42 @@ PORT = int(os.environ.get("PORT", 5000))
 
 api.add_resource(users_resource.UsersResource, '/api/users/<int:user_id>')
 api.add_resource(users_resource.UsersListResource, '/api/users')
+api.add_resource(tasks_resource.TasksResource, '/api/tasks/<int:author>')
+api.add_resource(tasks_resource.TasksListResource, '/api/tasks')
 
 
 @login_manager.user_loader
 def load_user(user_id):
     session = db_session.create_session()
     return session.query(User).get(user_id)
+
+
+@app.route("/")
+def index():
+    return render_template('base.html')
+
+
+@app.route('/tasks')
+def tasks():
+    session = db_session.create_session()
+    task = session.query(Task)
+    return render_template("tasks.html", news=task)
+
+
+@app.route('/add_task', methods=['GET', 'POST'])
+def add_task():
+    form = TaskForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'is_finished': form.is_finished.data
+        }).json()
+        if 'message' in res:
+            return render_template('add_task.html', title='Задачи на день', form=form,
+                                   message=res['message'])
+        return redirect('/')
+    return render_template('add_task.html', title='Задачи на день', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -78,3 +110,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+

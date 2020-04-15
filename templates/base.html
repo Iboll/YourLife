@@ -12,16 +12,25 @@
 <body>
 <header>
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">Your Life</a>
+        <a class="navbar-brand" href="#" style="font-size: 40px;">Your Life</a>
+        <div class="menu mr-auto" style="font-size: 25px; margin-left: 20px;">
+            <a href="/" style="font-size: 25px; margin-left: 20px;">Главная</a>
+            <a href="#" style="font-size: 25px; margin-left: 20px;">Задачи на день</a>
+            <a href="#" style="font-size: 25px; margin-left: 20px;">Глобальные цели</a>
+        </div>
+        {% if current_user.is_authenticated %}
+        <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+        {% else %}
         <p>
             <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
             <a class="btn btn-success" href="/login">Войти</a>
         </p>
+        {% endif %}
     </nav>
 </header>
 <!-- Begin page content -->
 <main role="main" class="container">
-    {% block content %}{% endblock %}
+    {% block content %} {% endblock %}
 </main>
 </body>
 </html>
