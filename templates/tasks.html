@@ -6,4 +6,17 @@
         <img src="{{ url_for('static', filename='add_icon.jpg') }}">
     </a>
 </h1>
+<nav>
+    {% for item in news%}
+    {% if current_user.id == 1 %}
+    <div class="col-md6 border rounded">
+        <h2>{{item.name }}</h2>
+        <div>
+            {{item.about}}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</nav>
+
 {% endblock %}

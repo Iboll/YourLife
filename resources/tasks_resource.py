@@ -4,11 +4,13 @@ from flask_restful import abort, Resource, reqparse
 from data import db_session
 from data.tasks import Task
 from data.users import User
+from flask_login import current_user
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', required=True)
 parser.add_argument('about', required=True)
-parser.add_argument('is_finished', required=True)
+parser.add_argument('is_finished', required=True, type=bool)
 parser.add_argument('author', required=True)
 
 
@@ -49,7 +51,8 @@ class TasksListResource(Resource):
         user = Task(
             name=args['name'],
             about=args['about'],
-            is_finished=args['is_finished']
+            is_finished=args['is_finished'],
+            author=args['author']
         )
         session.add(user)
         session.commit()

@@ -53,12 +53,13 @@ def add_task():
         res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
             'name': form.name.data,
             'about': form.about.data,
-            'is_finished': form.is_finished.data
+            'is_finished': form.is_finished.data,
+            'author': form.user.name.data
         }).json()
         if 'message' in res:
             return render_template('add_task.html', title='Задачи на день', form=form,
                                    message=res['message'])
-        return redirect('/')
+        return redirect('/tasks')
     return render_template('add_task.html', title='Задачи на день', form=form)
 
 
@@ -110,7 +111,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-

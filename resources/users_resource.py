@@ -20,6 +20,7 @@ def abort_if_news_not_found(user_id):
         abort(404, message=f"User {user_id} not found")
 
 
+
 class UsersResource(Resource):
     def get(self, user_id):
         abort_if_news_not_found(user_id)

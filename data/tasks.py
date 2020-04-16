@@ -19,4 +19,7 @@ class Task(SqlAlchemyBase, UserMixin, SerializerMixin):
                                       default=datetime.datetime.now)
     author = sqlalchemy.Column(sqlalchemy.Integer,
                                sqlalchemy.ForeignKey("users.id"))
+
     user = orm.relation('User')
+
+
