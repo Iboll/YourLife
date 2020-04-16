@@ -1,22 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style="font-size: 60px; margin-left: 20px;">Ваши задачи на сегодня
+<h1 class='border' style="font-size: 60px; margin-left: 20px;">Ваши задачи на сегодня
     <a href="/add_task" style="text-indent: 800 px;">
         <img src="{{ url_for('static', filename='add_icon.jpg') }}">
     </a>
 </h1>
 <nav>
     {% for item in news%}
-    {% if current_user.id == 1 %}
-    <div class="col-md6 border rounded">
-        <h2>{{item.name }}</h2>
-        <div>
-            {{item.about}}
-        </div>
+    {% if current_user.email == item.author %}
+    <div class="col-md6 rounded">
+        <label class="container">
+            <h2>{{ item.name }}
+                <input type="checkbox">
+                <span class="checkmark"></span>
+            </h2>
+            <div>
+                {{item.about}}
+            </div>
+
+        </label>
     </div>
     {% endif %}
     {% endfor %}
 </nav>
 
 {% endblock %}
+

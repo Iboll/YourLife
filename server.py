@@ -54,7 +54,7 @@ def add_task():
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.user.name.data
+            'author': form.author.data
         }).json()
         if 'message' in res:
             return render_template('add_task.html', title='Задачи на день', form=form,
