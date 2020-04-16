@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Ваши задачи на сегодня</h1>
+<h1 style="font-size: 60px; margin-left: 20px;">Ваши задачи на сегодня
+    <a href="/add_task" style="text-indent: 800 px;">
+        <img src="{{ url_for('static', filename='add_icon.jpg') }}">
+    </a>
+</h1>
 {% endblock %}

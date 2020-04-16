@@ -9,6 +9,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', required=True)
 parser.add_argument('about', required=True)
 parser.add_argument('is_finished', required=True)
+parser.add_argument('author', required=True)
 
 
 def abort_if_task_not_found(user_id):
@@ -45,7 +46,7 @@ class TasksListResource(Resource):
     def post(self):
         args = parser.parse_args()
         session = db_session.create_session()
-        user = User(
+        user = Task(
             name=args['name'],
             about=args['about'],
             is_finished=args['is_finished']
