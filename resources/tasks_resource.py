@@ -14,7 +14,7 @@ parser.add_argument('author', required=True)
 
 def abort_if_task_not_found(task_id):
     session = db_session.create_session()
-    news = session.query(User).get(task_id)
+    news = session.query(Task).get(task_id)
     if not news:
         abort(404, message=f"Task {task_id} not found")
 
@@ -39,7 +39,7 @@ class TasksResource(Resource):
 class TasksListResource(Resource):
     def get(self):
         session = db_session.create_session()
-        news = session.query(User).all()
+        news = session.query(Task).all()
         return jsonify({'tasks': [item.to_dict(
             only=('name', 'about', 'is_finished')) for item in news]})
 

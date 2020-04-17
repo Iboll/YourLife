@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import requests
@@ -24,7 +25,7 @@ PORT = int(os.environ.get("PORT", 5000))
 
 api.add_resource(users_resource.UsersResource, '/api/users/<int:user_id>')
 api.add_resource(users_resource.UsersListResource, '/api/users')
-api.add_resource(tasks_resource.TasksResource, '/api/tasks/<int:author>')
+api.add_resource(tasks_resource.TasksResource, '/api/tasks/<int:task_id>')
 api.add_resource(tasks_resource.TasksListResource, '/api/tasks')
 
 
@@ -39,18 +40,17 @@ def index():
     return render_template('base.html')
 
 
-def update():
+def update_tasks():
     session = db_session.create_session()
-    # Просто взял g для примера
-    for task in session.query(Task).filter(Task.name == 'g'):
-        res = requests.delete(f'http://localhost:{PORT}/api/tasks/{task.id}').json()
-        if 'success' in res:
-            return redirect('/')
+    for task in session.query(Task):
+        if str(task.create_date) != str(datetime.date.today()) + ' 00:00:00':
+            task_id = task.id
+            requests.delete(f'http://localhost:{PORT}/api/tasks/{task_id}').json()
 
 
 @app.route('/tasks')
 def tasks():
-    update()
+    update_tasks()
     session = db_session.create_session()
     task = session.query(Task)
     return render_template("tasks.html", news=task)
