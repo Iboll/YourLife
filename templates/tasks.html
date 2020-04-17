@@ -11,12 +11,17 @@
     {% if current_user.email == item.author %}
     <div class="col-md6 rounded">
         <label class="container">
-            <h2>{{ item.name }}
+            <h1>
                 <input type="checkbox">
                 <span class="checkmark"></span>
-            </h2>
+                {{ item.name }}
+            </h1>
             <div>
                 {{item.about}}
+            </div>
+            <div>
+                <a href="/edit_task/{{ item.id }}" class="btn btn-info btn-sm">Изменить</a>
+                <a href="/task_delete/{{ item.id }}" class="btn btn-danger btn-sm">Удалить</a>
             </div>
 
         </label>

@@ -48,6 +48,34 @@ def update_tasks():
             requests.delete(f'http://localhost:{PORT}/api/tasks/{task_id}').json()
 
 
+@app.route('/task_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def task_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
+    return redirect('/tasks')
+
+
+@app.route('/edit_task/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(id):
+    form = TaskForm()
+    tasksg = requests.get(f'http://localhost:{PORT}/api/tasks/{id}').json()
+    news = tasksg['users']
+    if form.validate_on_submit():
+        res = requests.put(f'http://localhost:{PORT}/api/tasks/{id}', json={
+            'name': form.name.data,
+            'about': form.about.data
+        }).json()
+        if 'success' in res:
+            return render_template('edit_task.html', title='Редактирование новости', form=form,
+                                   message='Изменения успешно сохранены')
+        return render_template('edit_task.html', title='Редактирование новости', form=form,
+                               error=res['message'])
+    form.name.data = news['name']
+    form.about.data = news['about']
+    return render_template('edit_task.html', title='Редактирование новости', form=form)
+
+
 @app.route('/tasks')
 def tasks():
     update_tasks()

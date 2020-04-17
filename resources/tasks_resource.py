@@ -35,6 +35,16 @@ class TasksResource(Resource):
         session.commit()
         return jsonify({'success': 'OK'})
 
+    def put(self, task_id):
+        abort_if_task_not_found(task_id)
+        args = parser.parse_args()
+        session = db_session.create_session()
+        task = session.query(Task).get(task_id)
+        task.name = args['name']
+        task.about = args['about']
+        session.commit()
+        return jsonify({'success': 'OK'})
+
 
 class TasksListResource(Resource):
     def get(self):
