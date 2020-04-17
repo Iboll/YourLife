@@ -4,8 +4,6 @@ from flask_restful import abort, Resource, reqparse
 from data import db_session
 from data.tasks import Task
 from data.users import User
-from flask_login import current_user
-
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', required=True)
@@ -14,25 +12,25 @@ parser.add_argument('is_finished', required=True, type=bool)
 parser.add_argument('author', required=True)
 
 
-def abort_if_task_not_found(user_id):
+def abort_if_task_not_found(task_id):
     session = db_session.create_session()
-    news = session.query(User).get(user_id)
+    news = session.query(User).get(task_id)
     if not news:
-        abort(404, message=f"Task {user_id} not found")
+        abort(404, message=f"Task {task_id} not found")
 
 
 class TasksResource(Resource):
-    def get(self, user_id):
-        abort_if_task_not_found(user_id)
+    def get(self, task_id):
+        abort_if_task_not_found(task_id)
         session = db_session.create_session()
-        user = session.query(Task).get(user_id)
+        user = session.query(Task).get(task_id)
         return jsonify({'users': user.to_dict(
             only=('name', 'about', 'is_finished'))})
 
-    def delete(self, user_id):
-        abort_if_task_not_found(user_id)
+    def delete(self, task_id):
+        abort_if_task_not_found(task_id)
         session = db_session.create_session()
-        news = session.query(Task).get(user_id)
+        news = session.query(Task).get(task_id)
         session.delete(news)
         session.commit()
         return jsonify({'success': 'OK'})

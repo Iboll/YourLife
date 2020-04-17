@@ -39,8 +39,18 @@ def index():
     return render_template('base.html')
 
 
+def update():
+    session = db_session.create_session()
+    # Просто взял g для примера
+    for task in session.query(Task).filter(Task.name == 'g'):
+        res = requests.delete(f'http://localhost:{PORT}/api/tasks/{task.id}').json()
+        if 'success' in res:
+            return redirect('/')
+
+
 @app.route('/tasks')
 def tasks():
+    update()
     session = db_session.create_session()
     task = session.query(Task)
     return render_template("tasks.html", news=task)

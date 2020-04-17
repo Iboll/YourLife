@@ -9,3 +9,4 @@ class TaskForm(FlaskForm):
     is_finished = BooleanField("Законченость")
     author = StringField('Автор задачи (ваш логин)', validators=[DataRequired()])
     submit = SubmitField('Добавить')
+
