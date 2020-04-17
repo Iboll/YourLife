@@ -11,7 +11,7 @@ from data import db_session
 from data.aims import Aim
 from data.tasks import Task
 from data.users import User
-from forms.aims import AimForm
+from forms.gl_aims import AimForm
 from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
