@@ -25,23 +25,13 @@ class TasksResource(Resource):
         session = db_session.create_session()
         user = session.query(Task).get(task_id)
         return jsonify({'users': user.to_dict(
-            only=('name', 'about', 'is_finished'))})
+            only=('name', 'about', 'is_finished', 'author'))})
 
     def delete(self, task_id):
         abort_if_task_not_found(task_id)
         session = db_session.create_session()
         news = session.query(Task).get(task_id)
         session.delete(news)
-        session.commit()
-        return jsonify({'success': 'OK'})
-
-    def put(self, task_id):
-        abort_if_task_not_found(task_id)
-        args = parser.parse_args()
-        session = db_session.create_session()
-        task = session.query(Task).get(task_id)
-        task.name = args['name']
-        task.about = args['about']
         session.commit()
         return jsonify({'success': 'OK'})
 

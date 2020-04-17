@@ -59,21 +59,19 @@ def task_delete(id):
 @login_required
 def edit_task(id):
     form = TaskForm()
-    tasksg = requests.get(f'http://localhost:{PORT}/api/tasks/{id}').json()
-    news = tasksg['users']
     if form.validate_on_submit():
-        res = requests.put(f'http://localhost:{PORT}/api/tasks/{id}', json={
+        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
             'name': form.name.data,
-            'about': form.about.data
+            'about': form.about.data,
+            'is_finished': form.is_finished.data,
+            'author': form.author.data
         }).json()
-        if 'success' in res:
-            return render_template('edit_task.html', title='Редактирование новости', form=form,
-                                   message='Изменения успешно сохранены')
-        return render_template('edit_task.html', title='Редактирование новости', form=form,
-                               error=res['message'])
-    form.name.data = news['name']
-    form.about.data = news['about']
-    return render_template('edit_task.html', title='Редактирование новости', form=form)
+        requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
+        if 'message' in res:
+            return render_template('edit_task.html', title='nngf', form=form,
+                                   message=res['message'])
+        return redirect('/tasks')
+    return render_template('edit_task.html', title='Задачи на день', form=form)
 
 
 @app.route('/tasks')
@@ -110,7 +108,7 @@ def register():
             'name': form.name.data,
             'surname': form.surname.data,
             'age': form.age.data,
-            'about': '',
+            'about': form.about.data,
             'password': form.password.data
         }).json()
         if 'message' in res:
