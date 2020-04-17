@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class='border' style="font-size: 60px; margin-left: 20px;">Ваши цели
+    <a href="/add_aim" style="text-indent: 800 px;">
+        <img src="{{ url_for('static', filename='add_icon.jpg') }}">
+    </a>
+</h1>
+<nav>
+    {% for item in news%}
+    {% if current_user.email == item.author %}
+    <div class="col-md6 rounded">
+        <label class="container">
+            <h1>
+                <input type="checkbox">
+                <span class="checkmark"></span>
+                {{ item.name }}
+            </h1>
+            <div>
+                {{item.about}}
+                {{item.finish_date}}
+            </div>
+            <div>
+                <a href="/edit_aim/{{ item.id }}" class="btn btn-info btn-sm">Изменить</a>
+                <a href="/aim_delete/{{ item.id }}" class="btn btn-danger btn-sm">Удалить</a>
+            </div>
+
+        </label>
+    </div>
+    {% endif %}
+    {% endfor %}
+</nav>
+
+{% endblock %}

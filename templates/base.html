@@ -14,9 +14,11 @@
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="#" style="font-size: 40px;">Your Life</a>
         <div class="menu mr-auto" style="font-size: 25px; margin-left: 20px;">
+            {% if current_user.is_authenticated %}
             <a href="/" style="font-size: 25px; margin-left: 20px;">Главная</a>
             <a href="/tasks" style="font-size: 25px; margin-left: 20px;">Задачи на день</a>
-            <a href="#" style="font-size: 25px; margin-left: 20px;">Глобальные цели</a>
+            <a href="/aims" style="font-size: 25px; margin-left: 20px;">Глобальные цели</a>
+            {% endif %}
         </div>
         {% if current_user.is_authenticated %}
         <a class="navbar-brand" href="/logout" style="font-size: 20px;">{{ current_user.name }}</a>

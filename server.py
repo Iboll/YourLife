@@ -8,12 +8,14 @@ from flask_restful import Api
 from werkzeug.utils import redirect
 
 from data import db_session
+from data.aims import Aim
 from data.tasks import Task
 from data.users import User
+from forms.aims import AimForm
 from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
-from resources import users_resource, tasks_resource
+from resources import users_resource, tasks_resource, aims_resource
 
 app = Flask(__name__)
 api = Api(app)
@@ -27,6 +29,8 @@ api.add_resource(users_resource.UsersResource, '/api/users/<int:user_id>')
 api.add_resource(users_resource.UsersListResource, '/api/users')
 api.add_resource(tasks_resource.TasksResource, '/api/tasks/<int:task_id>')
 api.add_resource(tasks_resource.TasksListResource, '/api/tasks')
+api.add_resource(aims_resource.AimsResource, '/api/aims/<int:aim_id>')
+api.add_resource(aims_resource.AimsListResource, '/api/aims')
 
 
 @login_manager.user_loader
@@ -68,7 +72,7 @@ def edit_task(id):
         }).json()
         requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
         if 'message' in res:
-            return render_template('edit_task.html', title='nngf', form=form,
+            return render_template('edit_task.html', title='Редактирование задачи', form=form,
                                    message=res['message'])
         return redirect('/tasks')
     return render_template('edit_task.html', title='Задачи на день', form=form)
@@ -138,6 +142,59 @@ def login():
 def logout():
     logout_user()
     return redirect("/login")
+
+
+@app.route('/aim_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def aim_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
+    return redirect('/aims')
+
+
+@app.route('/edit_aim/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_aim(id):
+    form = AimForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/aims', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'is_finished': form.is_finished.data,
+            'author': form.author.data,
+            'finish_date': form.finish_date.data
+        }).json()
+        requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
+        if 'message' in res:
+            return render_template('aim_edit.html', title='Редактирование цели', form=form,
+                                   message=res['message'])
+        return redirect('/aims')
+    return render_template('aim_edit.html', title='Задачи на день', form=form)
+
+
+@app.route('/aims')
+def aims():
+    update_tasks()
+    session = db_session.create_session()
+    aims = session.query(Aim)
+    return render_template("aims.html", news=aims)
+
+
+@app.route('/add_aim', methods=['GET', 'POST'])
+def add_aim():
+    form = AimForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/aims', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'is_finished': form.is_finished.data,
+            'author': form.author.data,
+            'finish_date': form.finish_date.data
+        }).json()
+        if 'message' in res:
+            return render_template('add_aim.html', title='Задачи на день', form=form,
+                                   message=res['message'])
+        return redirect('/aims')
+    return render_template('add_aim.html', title='Задачи на день', form=form)
 
 
 def main():
