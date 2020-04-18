@@ -12,7 +12,7 @@ parser.add_argument('author', required=True)
 parser.add_argument('finish_date', required=True)
 
 
-def abort_if_task_not_found(aim_id):
+def abort_if_aim_not_found(aim_id):
     session = db_session.create_session()
     news = session.query(Aim).get(aim_id)
     if not news:
@@ -21,14 +21,14 @@ def abort_if_task_not_found(aim_id):
 
 class AimsResource(Resource):
     def get(self, aim_id):
-        abort_if_task_not_found(aim_id)
+        abort_if_aim_not_found(aim_id)
         session = db_session.create_session()
         user = session.query(Aim).get(aim_id)
         return jsonify({'users': user.to_dict(
             only=('name', 'about', 'is_finished', 'author', 'finish_date'))})
 
     def delete(self, aim_id):
-        abort_if_task_not_found(aim_id)
+        abort_if_aim_not_found(aim_id)
         session = db_session.create_session()
         news = session.query(Aim).get(aim_id)
         session.delete(news)

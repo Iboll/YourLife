@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class='border' style="font-size: 60px; margin-left: 20px;">Ваши привычки
+    <a href="/add_habit" style="text-indent: 800 px;">
+        <img src="{{ url_for('static', filename='add_icon.jpg') }}">
+    </a>
+</h1>
+<nav>
+    {% for item in news%}
+    {% if current_user.email == item.author %}
+    <div class="col-md6 rounded">
+        <label class="container">
+            <h1>
+                {{ item.name }}
+            </h1>
+            <a href="/change_habit/1/{{ item.id }}">
+                {% if item.day1 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/2/{{ item.id }}">
+                {% if item.day2 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/3/{{ item.id }}">
+                {% if item.day3 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/4/{{ item.id }}">
+                {% if item.day4 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/5/{{ item.id }}">
+                {% if item.day5 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/6/{{ item.id }}">
+                {% if item.day6 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <a href="/change_habit/7/{{ item.id }}">
+                {% if item.day7 == True %}
+                <img src="{{ url_for('static', filename='done.jpg') }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                {% endif %}
+            </a>
+            <div>
+                {{item.create_date}}
+            </div>
+            <div>
+                <a href="/edit_habit/{{ item.id }}" class="btn btn-info btn-sm">Изменить</a>
+                <a href="/habit_delete/{{ item.id }}" class="btn btn-danger btn-sm">Удалить</a>
+            </div>
+
+        </label>
+    </div>
+    {% endif %}
+    {% endfor %}
+</nav>
+
+{% endblock %}

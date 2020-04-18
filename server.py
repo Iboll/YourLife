@@ -9,13 +9,15 @@ from werkzeug.utils import redirect
 
 from data import db_session
 from data.aims import Aim
+from data.habits import Habit
 from data.tasks import Task
 from data.users import User
+from forms.ft_habits import HabitForm
 from forms.gl_aims import AimForm
 from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
-from resources import users_resource, tasks_resource, aims_resource
+from resources import users_resource, tasks_resource, aims_resource, habits_resource
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,6 +33,8 @@ api.add_resource(tasks_resource.TasksResource, '/api/tasks/<int:task_id>')
 api.add_resource(tasks_resource.TasksListResource, '/api/tasks')
 api.add_resource(aims_resource.AimsResource, '/api/aims/<int:aim_id>')
 api.add_resource(aims_resource.AimsListResource, '/api/aims')
+api.add_resource(habits_resource.HabitsResource, '/api/habits/<int:habit_id>')
+api.add_resource(habits_resource.HabitsListResource, '/api/habits')
 
 
 @login_manager.user_loader
@@ -227,6 +231,109 @@ def change_aim(id):
         news.is_finished = False
     session.commit()
     return redirect('/aims')
+
+
+@app.route('/habits')
+def habits():
+    session = db_session.create_session()
+    task = session.query(Habit)
+    return render_template("habits.html", news=task)
+
+
+@app.route('/add_habit', methods=['GET', 'POST'])
+def add_habit():
+    form = HabitForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/habits', json={
+            'name': form.name.data,
+            'day1': False,
+            'day2': False,
+            'day3': False,
+            'day4': False,
+            'day5': False,
+            'day6': False,
+            'day7': False,
+            'author': current_user.email
+        }).json()
+        if 'message' in res:
+            return render_template('add_habit.html', title='Задачи на день', form=form,
+                                   message=res['message'])
+        return redirect('/habits')
+    return render_template('add_habit.html', title='Задачи на день', form=form)
+
+
+@app.route('/edit_habit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_habit(id):
+    form = HabitForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/habits', json={
+            'name': form.name.data,
+            'day1': False,
+            'day2': False,
+            'day3': False,
+            'day4': False,
+            'day5': False,
+            'day6': False,
+            'day7': False,
+            'author': current_user.email
+        }).json()
+        requests.delete(f'http://localhost:{PORT}/api/habits/{id}').json()
+        if 'message' in res:
+            return render_template('edit_habit.html', title='Редактирование задачи', form=form,
+                                   message=res['message'])
+        return redirect('/habits')
+    return render_template('edit_habit.html', title='Задачи на день', form=form)
+
+
+@app.route('/habit_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def habit_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/habits/{id}').json()
+    return redirect('/habits')
+
+
+@app.route('/change_habit/<int:idd>/<int:id>')
+def change_habit(idd, id):
+    session = db_session.create_session()
+    news = session.query(Habit).filter(Habit.id == id).first()
+    if idd == 1:
+        if news.day1 is False:
+            news.day1 = True
+        elif news.day1 is True:
+            news.day1 = False
+    if idd == 2:
+        if news.day2 is False:
+            news.day2 = True
+        elif news.day2 is True:
+            news.day2 = False
+    if idd == 3:
+        if news.day3 is False:
+            news.day3 = True
+        elif news.day3 is True:
+            news.day3 = False
+    if idd == 4:
+        if news.day4 is False:
+            news.day4 = True
+        elif news.day4 is True:
+            news.day4 = False
+    if idd == 5:
+        if news.day5 is False:
+            news.day5 = True
+        elif news.day5 is True:
+            news.day5 = False
+    if idd == 6:
+        if news.day6 is False:
+            news.day6 = True
+        elif news.day6 is True:
+            news.day6 = False
+    if idd == 7:
+        if news.day7 is False:
+            news.day7 = True
+        elif news.day7 is True:
+            news.day7 = False
+    session.commit()
+    return redirect('/habits')
 
 
 def main():
