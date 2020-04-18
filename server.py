@@ -9,15 +9,17 @@ from werkzeug.utils import redirect
 
 from data import db_session
 from data.aims import Aim
+from data.blogs import Blog
 from data.habits import Habit
 from data.tasks import Task
 from data.users import User
+from forms.us_blog import BlogForm
 from forms.ft_habits import HabitForm
 from forms.gl_aims import AimForm
 from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
-from resources import users_resource, tasks_resource, aims_resource, habits_resource
+from resources import users_resource, tasks_resource, aims_resource, habits_resource, blogs_resource
 
 app = Flask(__name__)
 api = Api(app)
@@ -35,6 +37,8 @@ api.add_resource(aims_resource.AimsResource, '/api/aims/<int:aim_id>')
 api.add_resource(aims_resource.AimsListResource, '/api/aims')
 api.add_resource(habits_resource.HabitsResource, '/api/habits/<int:habit_id>')
 api.add_resource(habits_resource.HabitsListResource, '/api/habits')
+api.add_resource(blogs_resource.BlogsResource, '/api/blogs/<int:blog_id>')
+api.add_resource(blogs_resource.BlogsListResource, '/api/blogs')
 
 
 @login_manager.user_loader
@@ -274,30 +278,6 @@ def add_habit():
     return render_template('add_habit.html', title='Задачи на день', form=form)
 
 
-@app.route('/edit_habit/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_habit(id):
-    form = HabitForm()
-    if form.validate_on_submit():
-        res = requests.post(f'http://localhost:{PORT}/api/habits', json={
-            'name': form.name.data,
-            'day1': False,
-            'day2': False,
-            'day3': False,
-            'day4': False,
-            'day5': False,
-            'day6': False,
-            'day7': False,
-            'author': current_user.email
-        }).json()
-        requests.delete(f'http://localhost:{PORT}/api/habits/{id}').json()
-        if 'message' in res:
-            return render_template('edit_habit.html', title='Редактирование задачи', form=form,
-                                   message=res['message'])
-        return redirect('/habits')
-    return render_template('edit_habit.html', title='Задачи на день', form=form)
-
-
 @app.route('/habit_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def habit_delete(id):
@@ -346,6 +326,36 @@ def change_habit(idd, id):
             news.day7 = False
     session.commit()
     return redirect('/habits')
+
+
+@app.route('/blog')
+def blog():
+    session = db_session.create_session()
+    blog = session.query(Blog)
+    return render_template("blogs.html", news=blog)
+
+
+@app.route('/add_blog', methods=['GET', 'POST'])
+def add_blog():
+    form = BlogForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/blogs', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'author': current_user.email
+        }).json()
+        if 'message' in res:
+            return render_template('add_blog.html', title='Ваши записи', form=form,
+                                   message=res['message'])
+        return redirect('/blog')
+    return render_template('add_blog.html', title='Ваши записи', form=form)
+
+
+@app.route('/blog_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def blog_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/blogs/{id}').json()
+    return redirect('/blog')
 
 
 def main():
