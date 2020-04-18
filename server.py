@@ -52,57 +52,6 @@ def update_tasks():
             requests.delete(f'http://localhost:{PORT}/api/tasks/{task_id}').json()
 
 
-@app.route('/task_delete/<int:id>', methods=['GET', 'POST'])
-@login_required
-def task_delete(id):
-    requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
-    return redirect('/tasks')
-
-
-@app.route('/edit_task/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_task(id):
-    form = TaskForm()
-    if form.validate_on_submit():
-        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
-            'name': form.name.data,
-            'about': form.about.data,
-            'is_finished': form.is_finished.data,
-            'author': form.author.data
-        }).json()
-        requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
-        if 'message' in res:
-            return render_template('edit_task.html', title='Редактирование задачи', form=form,
-                                   message=res['message'])
-        return redirect('/tasks')
-    return render_template('edit_task.html', title='Задачи на день', form=form)
-
-
-@app.route('/tasks')
-def tasks():
-    update_tasks()
-    session = db_session.create_session()
-    task = session.query(Task)
-    return render_template("tasks.html", news=task)
-
-
-@app.route('/add_task', methods=['GET', 'POST'])
-def add_task():
-    form = TaskForm()
-    if form.validate_on_submit():
-        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
-            'name': form.name.data,
-            'about': form.about.data,
-            'is_finished': form.is_finished.data,
-            'author': form.author.data
-        }).json()
-        if 'message' in res:
-            return render_template('add_task.html', title='Задачи на день', form=form,
-                                   message=res['message'])
-        return redirect('/tasks')
-    return render_template('add_task.html', title='Задачи на день', form=form)
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -144,31 +93,67 @@ def logout():
     return redirect("/login")
 
 
-@app.route('/aim_delete/<int:id>', methods=['GET', 'POST'])
-@login_required
-def aim_delete(id):
-    requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
-    return redirect('/aims')
+@app.route('/tasks')
+def tasks():
+    update_tasks()
+    session = db_session.create_session()
+    task = session.query(Task)
+    return render_template("tasks.html", news=task)
 
 
-@app.route('/edit_aim/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_aim(id):
-    form = AimForm()
+@app.route('/add_task', methods=['GET', 'POST'])
+def add_task():
+    form = TaskForm()
     if form.validate_on_submit():
-        res = requests.post(f'http://localhost:{PORT}/api/aims', json={
+        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.author.data,
-            'finish_date': form.finish_date.data
+            'author': form.author.data
         }).json()
-        requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
         if 'message' in res:
-            return render_template('aim_edit.html', title='Редактирование цели', form=form,
+            return render_template('add_task.html', title='Задачи на день', form=form,
                                    message=res['message'])
-        return redirect('/aims')
-    return render_template('aim_edit.html', title='Задачи на день', form=form)
+        return redirect('/tasks')
+    return render_template('add_task.html', title='Задачи на день', form=form)
+
+
+@app.route('/edit_task/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(id):
+    form = TaskForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/tasks', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'is_finished': form.is_finished.data,
+            'author': form.author.data
+        }).json()
+        requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
+        if 'message' in res:
+            return render_template('edit_task.html', title='Редактирование задачи', form=form,
+                                   message=res['message'])
+        return redirect('/tasks')
+    return render_template('edit_task.html', title='Задачи на день', form=form)
+
+
+@app.route('/task_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def task_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
+    return redirect('/tasks')
+
+
+@app.route('/change_task/<int:id>')
+def change_task(id):
+    session = db_session.create_session()
+    news = session.query(Task).filter(Task.id == id).first()
+    if news.is_finished is False:
+        news.is_finished = True
+    elif news.is_finished is True:
+        news.is_finished = False
+    session.commit()
+    return redirect('/tasks')
 
 
 @app.route('/aims')
@@ -195,6 +180,33 @@ def add_aim():
                                    message=res['message'])
         return redirect('/aims')
     return render_template('add_aim.html', title='Задачи на день', form=form)
+
+
+@app.route('/edit_aim/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_aim(id):
+    form = AimForm()
+    if form.validate_on_submit():
+        res = requests.post(f'http://localhost:{PORT}/api/aims', json={
+            'name': form.name.data,
+            'about': form.about.data,
+            'is_finished': form.is_finished.data,
+            'author': form.author.data,
+            'finish_date': form.finish_date.data
+        }).json()
+        requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
+        if 'message' in res:
+            return render_template('aim_edit.html', title='Редактирование цели', form=form,
+                                   message=res['message'])
+        return redirect('/aims')
+    return render_template('aim_edit.html', title='Задачи на день', form=form)
+
+
+@app.route('/aim_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def aim_delete(id):
+    requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()
+    return redirect('/aims')
 
 
 @app.route('/change_aim/<int:id>')
