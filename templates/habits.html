@@ -16,56 +16,53 @@
             </h1>
             <a href="/change_habit/1/{{ item.id }}">
                 {% if item.day1 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/2/{{ item.id }}">
                 {% if item.day2 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/3/{{ item.id }}">
                 {% if item.day3 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/4/{{ item.id }}">
                 {% if item.day4 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/5/{{ item.id }}">
                 {% if item.day5 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/6/{{ item.id }}">
                 {% if item.day6 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
             <a href="/change_habit/7/{{ item.id }}">
                 {% if item.day7 == True %}
-                <img src="{{ url_for('static', filename='done.jpg') }}">
+                <img src="{{ url_for('static', filename='done_habit.png') }}">
                 {% else %}
-                <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                <img src="{{ url_for('static', filename='no_done_habit.png') }}">
                 {% endif %}
             </a>
-            <div>
-                {{item.create_date}}
-            </div>
             <div>
                 <a href="/edit_habit/{{ item.id }}" class="btn btn-info btn-sm">Изменить</a>
                 <a href="/habit_delete/{{ item.id }}" class="btn btn-danger btn-sm">Удалить</a>

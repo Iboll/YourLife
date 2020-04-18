@@ -64,6 +64,17 @@ def update_aims():
             requests.delete(f'http://localhost:{PORT}/api/aims/{aim_id}').json()
 
 
+def update_habits():
+    session = db_session.create_session()
+    date_now = datetime.datetime.now()
+    for elem in session.query(Habit):
+        date_2 = elem.create_date
+        difference = date_2 - date_now
+        if difference.days == -8:
+            habit_id = elem.id
+            requests.delete(f'http://localhost:{PORT}/api/habits/{habit_id}').json()
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -235,6 +246,7 @@ def change_aim(id):
 
 @app.route('/habits')
 def habits():
+    update_habits()
     session = db_session.create_session()
     task = session.query(Habit)
     return render_template("habits.html", news=task)
