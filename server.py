@@ -52,6 +52,14 @@ def update_tasks():
             requests.delete(f'http://localhost:{PORT}/api/tasks/{task_id}').json()
 
 
+def update_aims():
+    session = db_session.create_session()
+    for elem in session.query(Aim):
+        if '.'.join(str(datetime.date.today()).split('-')) == str(elem.finish_date):
+            aim_id = elem.id
+            requests.delete(f'http://localhost:{PORT}/api/aims/{aim_id}').json()
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -158,7 +166,7 @@ def change_task(id):
 
 @app.route('/aims')
 def aims():
-    update_tasks()
+    update_aims()
     session = db_session.create_session()
     aims = session.query(Aim)
     return render_template("aims.html", news=aims)

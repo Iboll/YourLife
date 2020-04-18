@@ -8,7 +8,7 @@ class AimForm(FlaskForm):
     about = TextAreaField("Описание")
     is_finished = BooleanField("Законченость")
     author = StringField('Автор задачи (ваш логин)', validators=[DataRequired()])
-    finish_date = StringField('Дата окончания', validators=[DataRequired()])
+    finish_date = StringField('Дата окончания в формате ГГГГ.ММ.ДД', validators=[DataRequired()])
     submit = SubmitField('Добавить')
 
 
