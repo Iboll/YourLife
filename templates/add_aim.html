@@ -24,15 +24,6 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.author.label }}<br>
-        {{ form.author(class="form-control") }}<br>
-        {% for error in form.author.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
         {{ form.finish_date.label }}<br>
         {{ form.finish_date(class="form-control") }}<br>
         {% for error in form.finish_date.errors %}

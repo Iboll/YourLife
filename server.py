@@ -3,7 +3,7 @@ import os
 
 import requests
 from flask import Flask, render_template
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restful import Api
 from werkzeug.utils import redirect
 
@@ -117,7 +117,7 @@ def add_task():
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.author.data
+            'author': current_user.email
         }).json()
         if 'message' in res:
             return render_template('add_task.html', title='Задачи на день', form=form,
@@ -135,7 +135,7 @@ def edit_task(id):
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.author.data
+            'author': current_user.email
         }).json()
         requests.delete(f'http://localhost:{PORT}/api/tasks/{id}').json()
         if 'message' in res:
@@ -180,7 +180,7 @@ def add_aim():
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.author.data,
+            'author': current_user.email,
             'finish_date': form.finish_date.data
         }).json()
         if 'message' in res:
@@ -199,7 +199,7 @@ def edit_aim(id):
             'name': form.name.data,
             'about': form.about.data,
             'is_finished': form.is_finished.data,
-            'author': form.author.data,
+            'author': current_user.email,
             'finish_date': form.finish_date.data
         }).json()
         requests.delete(f'http://localhost:{PORT}/api/aims/{id}').json()

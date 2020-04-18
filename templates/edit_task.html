@@ -23,15 +23,6 @@
             </p>
         {% endfor %}
     </p>
-    <p>
-        {{ form.author.label }}<br>
-        {{ form.author(class="form-control") }}<br>
-        {% for error in form.author.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
     <p>{{ form.is_finished() }} {{ form.is_finished.label }}</p>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     {{message}}
