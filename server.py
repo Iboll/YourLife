@@ -197,6 +197,18 @@ def add_aim():
     return render_template('add_aim.html', title='Задачи на день', form=form)
 
 
+@app.route('/change_aim/<int:id>')
+def change_aim(id):
+    session = db_session.create_session()
+    news = session.query(Aim).filter(Aim.id == id).first()
+    if news.is_finished is False:
+        news.is_finished = True
+    elif news.is_finished is True:
+        news.is_finished = False
+    session.commit()
+    return redirect('/aims')
+
+
 def main():
     db_session.global_init("db/data.sqlite")
     app.run(host='127.0.0.1', port=PORT)

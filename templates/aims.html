@@ -12,8 +12,13 @@
     <div class="col-md6 rounded">
         <label class="container">
             <h1>
-                <input type="checkbox">
-                <span class="checkmark"></span>
+                <a href="/change_aim/{{ item.id }}">
+                    {% if item.is_finished == True%}
+                        <img src="{{ url_for('static', filename='done.jpg') }}">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='no_done.jpg') }}">
+                    {% endif %}
+                </a>
                 {{ item.name }}
             </h1>
             <div>
