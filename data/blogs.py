@@ -7,6 +7,7 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
+# Класс записей
 class Blog(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'blogs'
 

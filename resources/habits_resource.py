@@ -4,6 +4,7 @@ from flask_restful import abort, Resource, reqparse
 from data import db_session
 from data.habits import Habit
 
+# Парсер
 parser = reqparse.RequestParser()
 parser.add_argument('name', required=True)
 parser.add_argument('day1', required=True, type=bool)
@@ -16,21 +17,25 @@ parser.add_argument('day7', required=True, type=bool)
 parser.add_argument('author', required=True)
 
 
+# Проверка существования привычки
 def abort_if_habit_not_found(habit_id):
     session = db_session.create_session()
-    news = session.query(Habit).get(habit_id)
-    if not news:
-        abort(404, message=f"Task {habit_id} not found")
+    habit = session.query(Habit).get(habit_id)
+    if not habit:
+        abort(404, message=f"Habit {habit_id} not found")
 
 
+# Ресурс привычки
 class HabitsResource(Resource):
+    # Получение привычки
     def get(self, habit_id):
         abort_if_habit_not_found(habit_id)
         session = db_session.create_session()
-        user = session.query(Habit).get(habit_id)
-        return jsonify({'users': user.to_dict(
+        habit = session.query(Habit).get(habit_id)
+        return jsonify({'habit': habit.to_dict(
             only=('name', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'author'))})
 
+    # Удаление привычки
     def delete(self, habit_id):
         abort_if_habit_not_found(habit_id)
         session = db_session.create_session()
@@ -40,13 +45,16 @@ class HabitsResource(Resource):
         return jsonify({'success': 'OK'})
 
 
+# Ресурс привычек
 class HabitsListResource(Resource):
+    # Получение привычек
     def get(self):
         session = db_session.create_session()
-        news = session.query(Habit).all()
-        return jsonify({'tasks': [item.to_dict(
-            only=('name', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'author')) for item in news]})
+        habits = session.query(Habit).all()
+        return jsonify({'habits': [item.to_dict(
+            only=('name', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'author')) for item in habits]})
 
+    # Создание привычки
     def post(self):
         args = parser.parse_args()
         session = db_session.create_session()

@@ -8,6 +8,7 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
+#  Класс привычек
 class Habit(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'habits'
 

@@ -6,6 +6,7 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
+# Класс целей
 class Aim(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'aims'
 

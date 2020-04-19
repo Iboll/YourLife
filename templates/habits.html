@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class='border' style="font-size: 60px; margin-left: 20px;">Ваши привычки
+<h1 style="font-size: 60px; margin-left: 20px;">Ваши привычки
     <a href="/add_habit" style="text-indent: 800 px;">
         <img src="{{ url_for('static', filename='add_icon.jpg') }}">
     </a>
@@ -12,7 +12,7 @@
     {% for item in news%}
     {% if current_user.email == item.author %}
     <div class="col-md6 rounded">
-        <label class="container">
+        <label class="container border">
             <h1>
                 {{ item.name }}
             </h1>

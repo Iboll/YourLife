@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class='border' style="font-size: 60px; margin-left: 20px;">Ваши цели
+<h1 style="font-size: 60px; margin-left: 20px;">Ваши цели
     <a href="/add_aim" style="text-indent: 800 px;">
         <img src="{{ url_for('static', filename='add_icon.jpg') }}">
     </a>
@@ -10,7 +10,7 @@
     {% for item in news%}
     {% if current_user.email == item.author %}
     <div class="col-md6 rounded">
-        <label class="container">
+        <label class="container"  style=" background-color: lightyellow;">
             <h1>
                 <a href="/change_aim/{{ item.id }}">
                     {% if item.is_finished == True%}
@@ -25,7 +25,7 @@
                 {{item.about}}
             </div>
             <div>
-                {{item.finish_date}}
+                Дедлайн {{item.finish_date}}
             </div>
             <div>
                 <a href="/edit_aim/{{ item.id }}" class="btn btn-info btn-sm">Изменить</a>
