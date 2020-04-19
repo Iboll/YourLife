@@ -12,7 +12,7 @@
 <body>
 <header>
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#" style="font-size: 40px;">Your Life</a>
+        <a class="navbar-brand" href="/" style="font-size: 40px;">Your Life</a>
         <div class="menu mr-auto" style="font-size: 25px; margin-left: 20px;">
             {% if current_user.is_authenticated %}
             <a href="/" style="font-size: 25px; margin-left: 20px;">Главная</a>
@@ -34,7 +34,19 @@
 </header>
 <!-- Begin page content -->
 <main role="main" class="container">
-    {% block content %} {% endblock %}
+    {% block content %}
+    {% if current_user.is_authenticated %}
+    <h1 align="center">Мы снова рады видеть Вас на нашем сайте!</h1>
+    <h4 align="center">Становимся лучше вместе</h4>
+    <img src="{{ url_for('static', filename='bpage2.jpg') }}" style="max-width: 100%; height: auto;">
+    {% else %}
+    <h1 align="center">YourLife - это сервис, который поможет тебе стать лучше!</h1>
+    <h5 align="center">YourLife может всецело заменит вам ваш дневник.
+        Здесь вы можете делать ваши записи, отслеживать новые привычки, задачи на день
+        и цели. Для этого всего лишь войдите в свой аккаунт или создайте его.</h5>
+    <img src="{{ url_for('static', filename='bpage1.jpg') }}" style="max-width: 100%; height: auto;">
+    {% endif %}
+    {% endblock %}
 </main>
 </body>
 </html>
