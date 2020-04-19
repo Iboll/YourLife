@@ -21,11 +21,14 @@ from forms.day_tasks import TaskForm
 from forms.log_user import LoginForm
 from forms.reg_user import RegisterForm
 from resources import users_resource, tasks_resource, aims_resource, habits_resource, blogs_resource
+from flask_ngrok import run_with_ngrok
 
-# API, менеджер авторизации
+# API, менеджер авторизации и ngrok
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+run_with_ngrok(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -402,7 +405,7 @@ def blog_delete(id):
 # Главная функция сервера
 def main():
     db_session.global_init("db/data.sqlite")
-    app.run(host='127.0.0.1', port=PORT)
+    app.run()
 
 
 if __name__ == '__main__':
