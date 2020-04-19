@@ -27,7 +27,7 @@ class BlogsResource(Resource):
         session = db_session.create_session()
         blog = session.query(Blog).get(blog_id)
         return jsonify({'blog': blog.to_dict(
-            only=('name', 'about', 'is_finished', 'author'))})
+            only=('name', 'about', 'author', 'create_date'))})
 
     # Удаление записи
     def delete(self, blog_id):
@@ -41,12 +41,12 @@ class BlogsResource(Resource):
 
 # Ресурс записей
 class BlogsListResource(Resource):
-    # Получениезаписей
+    # Получение записей
     def get(self):
         session = db_session.create_session()
         blogs = session.query(Blog).all()
         return jsonify({'blogs': [item.to_dict(
-            only=('name', 'about', 'is_finished')) for item in blogs]})
+            only=('name', 'about', 'author', 'create_date')) for item in blogs]})
 
     # Создание записи
     def post(self):
